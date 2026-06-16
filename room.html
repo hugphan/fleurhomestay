@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fleur Homestay — Chi tiết phòng</title>
+<link rel="icon" href="assets/logos/fleur-mark-olive.png" />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  body { background: var(--cream-50); }
+
+  .rd-header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(62,74,33,0.94); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-on-dark);
+  }
+  .rd-header__inner { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; }
+
+  .rd-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-display); font-size: 13.5px; font-weight: 600;
+    color: var(--text-muted); margin-bottom: var(--space-5);
+  }
+  .rd-back svg { width: 16px; height: 16px; }
+
+  .rd-wrap { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: var(--space-8); align-items: start; }
+  .rd-book { position: sticky; top: calc(var(--header-h) + 20px); }
+
+  .rd-hero { position: relative; aspect-ratio: 16/10; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); background: var(--sage-100); }
+  .rd-hero img { width: 100%; height: 100%; object-fit: cover; }
+  .rd-hero__badge { position: absolute; top: 14px; left: 14px; }
+
+  .rd-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+  .rd-thumb { aspect-ratio: 4/3; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; border: 2px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft); }
+  .rd-thumb:hover { transform: translateY(-2px); }
+  .rd-thumb.active { border-color: var(--olive-700); }
+  .rd-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .rd-meta { display: flex; gap: 18px; flex-wrap: wrap; color: var(--text-muted); font-size: 14.5px; margin-bottom: 18px; }
+  .rd-meta span { display: flex; align-items: center; gap: 7px; }
+  .rd-meta svg { width: 17px; height: 17px; }
+
+  .rd-desc { font-size: 17px; line-height: 1.7; color: var(--text-body); max-width: 60ch; }
+
+  .rd-amen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px 20px; }
+  .rd-amen { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--text-body); }
+  .rd-amen svg { width: 19px; height: 19px; color: var(--olive-700); flex: none; }
+
+  .rd-others-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: var(--space-5); }
+
+  .rd-footer { background: var(--olive-950); color: var(--sage-300); padding: 40px 0; }
+  .rd-footer__inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; align-items: center; }
+  .rd-footer a:hover { color: var(--cream-50); }
+
+  @media (max-width: 900px){ .rd-wrap { grid-template-columns: 1fr; } .rd-book { position: static; } }
+</style>
+</head>
+<body>
+
+  <!-- ===================== Header ===================== -->
+  <header class="rd-header">
+    <div class="fleur-container rd-header__inner">
+      <a href="index.html"><img src="assets/logos/fleur-full-cream.png" alt="Fleur Homestay" style="height:46px;width:auto;display:block;" /></a>
+      <a class="btn btn--gold btn--sm" data-tel><i data-lucide="phone"></i><span data-hotline></span></a>
+    </div>
+  </header>
+
+  <main class="fleur-container" style="padding-top:var(--space-7);padding-bottom:var(--space-10);">
+    <a href="index.html" class="rd-back"><i data-lucide="arrow-left"></i> Tất cả phòng</a>
+    <div class="rd-wrap">
+      <div>
+        <!-- Gallery -->
+        <div>
+          <div class="rd-hero">
+            <img id="rd-hero-img" src="" alt="" />
+            <div class="rd-hero__badge"><span class="badge badge--gold" id="rd-price-badge" style="white-space:nowrap;"></span></div>
+          </div>
+          <div class="rd-thumbs" id="rd-thumbs"></div>
+        </div>
+
+        <!-- Title + description -->
+        <div style="margin-top:var(--space-6);">
+          <span class="eyebrow eyebrow--gold" id="rd-facility-eyebrow"></span>
+          <h1 id="rd-name" style="font-size:clamp(30px,4vw,44px);font-weight:800;color:var(--olive-800);margin:8px 0 12px;"></h1>
+          <div class="rd-meta">
+            <span><i data-lucide="bed-double"></i> <span id="rd-beds"></span></span>
+            <span><i data-lucide="users"></i> <span id="rd-guests"></span></span>
+          </div>
+          <p class="rd-desc" id="rd-desc"></p>
+
+          <h3 style="font-size:17px;font-weight:700;color:var(--olive-800);margin:var(--space-6) 0 var(--space-4);">Tiện ích trong phòng</h3>
+          <div class="rd-amen-grid" id="rd-amenities"></div>
+        </div>
+
+        <!-- Other rooms -->
+        <section id="rd-others" style="margin-top:var(--space-9);"></section>
+      </div>
+
+      <!-- Booking card -->
+      <div class="card rd-book">
+        <span class="eyebrow eyebrow--muted">Giá tham khảo</span>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:8px 0 2px;">
+          <span id="rd-price" style="font-family:var(--font-display);font-weight:800;font-size:38px;color:var(--olive-800);"></span>
+          <span style="font-size:15px;color:var(--text-muted);">/ đêm</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-faint);margin:0 0 18px;">Giá có thể thay đổi theo ngày &amp; số đêm. Nhắn để nhận báo giá chính xác.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a class="btn btn--primary btn--lg btn--block" data-tel><i data-lucide="phone"></i>Gọi <span data-hotline></span></a>
+          <a class="btn btn--secondary btn--lg btn--block" data-fanpage target="_blank" rel="noopener"><i data-lucide="message-circle"></i>Nhắn Fanpage</a>
+          <a class="btn btn--ghost btn--md btn--block" data-tiktok target="_blank" rel="noopener"><i data-lucide="music-2"></i><span data-tiktok-label></span></a>
+        </div>
+        <hr class="divider" style="margin:20px 0;" />
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:var(--text-body);">
+          <div style="display:flex;align-items:center;gap:9px;"><i data-lucide="clock" style="width:16px;height:16px;color:var(--olive-700);"></i> Check-in <span data-checkin></span> · Check-out <span data-checkout></span></div>
+          <a id="rd-map" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;color:var(--olive-700);font-weight:500;"><i data-lucide="map-pin" style="width:16px;height:16px;color:var(--olive-700);"></i> <span id="rd-map-label"></span></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="rd-footer">
+    <div class="fleur-container rd-footer__inner">
+      <a href="index.html"><img src="assets/logos/fleur-full-cream.png" alt="Fleur Homestay" style="height:44px;width:auto;display:block;" /></a>
+      <div style="font-size:13.5px;line-height:1.9;text-align:right;">
+        <a data-tel style="display:block;"><span data-hotline></span></a>
+        <a data-fanpage target="_blank" rel="noopener" style="display:block;"><span data-fanpage-label></span></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="rooms-data.js"></script>
+  <script>
+    (function () {
+      var C = window.FLEUR_CONTACT;
+      var ROOMS = window.FLEUR_ROOMS;
+      var FACILITIES = window.FLEUR_FACILITIES;
+      var AMBIANCE = window.FLEUR_AMBIANCE;
+
+      var AMENITY_ICON = {
+        'Máy chiếu': 'projector', 'Boardgame': 'dices', 'WC khép kín': 'bath',
+        'Bếp': 'cooking-pot', 'Smart TV': 'tv', 'Máy chơi game': 'gamepad-2',
+        'Wifi': 'wifi', 'Điều hòa': 'wind',
+      };
+      var STANDARD = ['Wifi', 'Điều hòa'];
+
+      var params = new URLSearchParams(location.search);
+      var slug = params.get('room') || ROOMS[0].slug;
+      var room = ROOMS.find(function (r) { return r.slug === slug; }) || ROOMS[0];
+      var facility = FACILITIES.find(function (f) { return f.id === room.facility; });
+      var gallery = [room.images[0], room.images[1], AMBIANCE[0], AMBIANCE[3]];
+      var allAmenities = room.amenities.concat(STANDARD.filter(function (s) { return room.amenities.indexOf(s) === -1; }));
+
+      document.title = 'Fleur Homestay — ' + room.name;
+
+      // ---- Bind contact ----
+      function setAll(sel, fn) { document.querySelectorAll(sel).forEach(fn); }
+      setAll('[data-tel]', function (el) { el.setAttribute('href', 'tel:' + C.hotlineTel); });
+      setAll('[data-hotline]', function (el) { el.textContent = C.hotline; });
+      setAll('[data-fanpage]', function (el) { el.setAttribute('href', C.fanpage); });
+      setAll('[data-fanpage-label]', function (el) { el.textContent = C.fanpageLabel; });
+      setAll('[data-tiktok]', function (el) { el.setAttribute('href', C.tiktok); });
+      setAll('[data-tiktok-label]', function (el) { el.textContent = C.tiktokLabel; });
+      setAll('[data-checkin]', function (el) { el.textContent = C.checkin; });
+      setAll('[data-checkout]', function (el) { el.textContent = C.checkout; });
+
+      // ---- Fill room content ----
+      document.getElementById('rd-facility-eyebrow').textContent = 'Cơ sở ' + facility.name;
+      document.getElementById('rd-name').textContent = room.name;
+      document.getElementById('rd-beds').textContent = room.beds;
+      document.getElementById('rd-guests').textContent = room.guests;
+      document.getElementById('rd-desc').textContent = room.desc;
+      document.getElementById('rd-price').textContent = room.price + 'K';
+      document.getElementById('rd-price-badge').textContent = 'Chỉ từ ' + room.price + 'K';
+
+      var mapLink = document.getElementById('rd-map');
+      mapLink.setAttribute('href', facility.map);
+      document.getElementById('rd-map-label').textContent = 'Cơ sở ' + facility.name + ' · ' + facility.area + ' · Bản đồ';
+
+      // ---- Gallery ----
+      var heroImg = document.getElementById('rd-hero-img');
+      heroImg.src = gallery[0];
+      heroImg.alt = room.name;
+      var thumbsEl = document.getElementById('rd-thumbs');
+      gallery.forEach(function (src, i) {
+        var t = document.createElement('div');
+        t.className = 'rd-thumb' + (i === 0 ? ' active' : '');
+        t.innerHTML = '<img src="' + src + '" alt="' + room.name + ' ' + (i + 1) + '" />';
+        t.addEventListener('click', function () {
+          heroImg.src = src;
+          thumbsEl.querySelectorAll('.rd-thumb').forEach(function (x) { x.classList.remove('active'); });
+          t.classList.add('active');
+        });
+        thumbsEl.appendChild(t);
+      });
+
+      // ---- Amenities ----
+      document.getElementById('rd-amenities').innerHTML = allAmenities.map(function (a) {
+        return '<div class="rd-amen"><i data-lucide="' + (AMENITY_ICON[a] || 'check') + '"></i> ' + a + '</div>';
+      }).join('');
+
+      // ---- Other rooms in same facility ----
+      var others = ROOMS.filter(function (r) { return r.facility === room.facility && r.slug !== room.slug; });
+      if (others.length) {
+        var cards = others.map(function (r) {
+          var tags = r.amenities.slice(0, 3).map(function (a) { return '<span class="tag tag--sm tag--sage">' + a + '</span>'; }).join('');
+          return '' +
+            '<a class="room-card" href="room.html?room=' + r.slug + '">' +
+              '<div class="room-card__media"><img src="' + r.images[0] + '" alt="' + r.name + '" /></div>' +
+              '<div class="room-card__body">' +
+                '<h3 class="room-card__title">' + r.name + '</h3>' +
+                '<span class="room-card__loc">' + facility.name + '</span>' +
+                '<div class="room-card__tags">' + tags + '</div>' +
+                '<div class="room-card__foot">' +
+                  '<div><span class="room-card__price">' + r.price + 'K</span> <span class="room-card__unit">/ đêm</span></div>' +
+                  '<span class="btn btn--primary btn--sm">Xem chi tiết</span>' +
+                '</div>' +
+              '</div>' +
+            '</a>';
+        }).join('');
+        document.getElementById('rd-others').innerHTML =
+          '<h2 style="font-size:26px;font-weight:800;color:var(--olive-800);margin-bottom:var(--space-5);">Phòng khác tại ' + facility.name + '</h2>' +
+          '<div class="rd-others-grid">' + cards + '</div>';
+      }
+
+      if (window.lucide) window.lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>

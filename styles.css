@@ -1,0 +1,403 @@
+/* ============================================================
+   Fleur Homestay — Website stylesheet (self-contained)
+   Recreated from the Claude Design handoff as a clean static
+   site: design tokens + base reset + component styles, no
+   React/Babel runtime. Edit content in rooms-data.js.
+   ============================================================ */
+
+/* ---- Webfonts (Google Fonts substitutes for the brand set) --
+   Montserrat → display/labels · Be Vietnam Pro → body · Allura → script.
+   Replace with @font-face once the licensed brand fonts arrive. */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Allura&display=swap');
+
+/* ============================================================
+   TOKENS — Colors
+   Brand: Olive #3e4a21 · Cream/Be #fffcdf — "trầm, dày, thanh lịch"
+   ============================================================ */
+:root {
+  /* Olive (primary brand family) */
+  --olive-950: #232a13;
+  --olive-900: #2c3518;
+  --olive-800: #3e4a21;   /* ★ PRIMARY olive */
+  --olive-700: #4a5a2a;
+  --olive-600: #5b6d36;
+
+  /* Sage (muted greens) */
+  --sage-500: #6f7a4f;
+  --sage-400: #8a936a;
+  --sage-300: #a8b08c;
+  --sage-200: #c8ccb3;
+  --sage-100: #e4e6d6;
+
+  /* Cream / Be (light family) */
+  --cream-50:  #fffcdf;   /* ★ PRIMARY cream */
+  --cream-100: #f8f3d2;
+  --cream-200: #efe9bf;
+  --paper:     #faf6e6;
+
+  /* Gold (premium accent, used sparingly) */
+  --gold-500: #c2a05c;
+  --gold-400: #d4b878;
+
+  /* Neutrals */
+  --white:     #ffffff;
+  --ink-900:   #1d1f14;
+  --stone-500: #837e6a;
+  --stone-200: #e7e3d6;
+
+  /* Semantic / functional */
+  --success: #5b6d36;
+  --warning: #b8893f;
+  --danger:  #9d4a36;
+
+  /* Semantic aliases */
+  --color-bg:           var(--cream-50);
+  --color-bg-deep:      var(--olive-800);
+  --surface-card:       var(--white);
+  --surface-card-cream: var(--paper);
+  --surface-raised:     var(--white);
+  --surface-sunken:     var(--cream-100);
+
+  --text-body:     var(--olive-900);
+  --text-heading:  var(--olive-800);
+  --text-muted:    var(--sage-500);
+  --text-faint:    var(--stone-500);
+
+  --text-on-dark:        var(--cream-50);
+  --text-on-dark-muted:  var(--sage-300);
+
+  --brand-primary:    var(--olive-800);
+  --brand-primary-ink:var(--olive-950);
+  --brand-on-primary: var(--cream-50);
+  --accent:           var(--gold-500);
+
+  --border:        var(--stone-200);
+  --border-strong: var(--sage-300);
+  --border-on-dark: rgba(255, 252, 223, 0.22);
+  --ring:          color-mix(in srgb, var(--olive-700) 45%, transparent);
+
+  /* ---- Typography ---- */
+  --font-display: 'Montserrat', 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-body:    'Be Vietnam Pro', 'Montserrat', system-ui, sans-serif;
+  --font-script:  'Allura', 'Snell Roundhand', cursive;
+
+  --fw-light: 300; --fw-regular: 400; --fw-medium: 500;
+  --fw-semibold: 600; --fw-bold: 700; --fw-black: 800;
+
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-md: 1.125rem; --text-lg: 1.375rem; --text-xl: 1.75rem;
+  --text-2xl: 2.25rem; --text-3xl: 3rem;    --text-4xl: 4rem; --text-5xl: 5.5rem;
+
+  --leading-tight: 1.08; --leading-snug: 1.25;
+  --leading-normal: 1.55; --leading-relaxed: 1.75;
+
+  --tracking-tightest: -0.02em; --tracking-tight: -0.01em; --tracking-normal: 0;
+  --tracking-wide: 0.08em; --tracking-label: 0.22em; --tracking-arc: 0.34em;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-0: 0; --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem; --space-7: 2.5rem;
+  --space-8: 3rem; --space-9: 4rem; --space-10: 5rem; --space-12: 7rem; --space-16: 10rem;
+
+  /* ---- Radius ---- */
+  --radius-xs: 4px; --radius-sm: 8px; --radius-md: 14px;
+  --radius-lg: 22px; --radius-xl: 32px; --radius-pill: 999px; --radius-circle: 50%;
+
+  /* ---- Shadows (soft, warm, low) ---- */
+  --shadow-xs: 0 1px 2px rgba(35, 42, 19, 0.06);
+  --shadow-sm: 0 2px 8px rgba(35, 42, 19, 0.07);
+  --shadow-md: 0 8px 24px rgba(35, 42, 19, 0.10);
+  --shadow-lg: 0 18px 48px rgba(35, 42, 19, 0.14);
+  --shadow-xl: 0 30px 80px rgba(35, 42, 19, 0.18);
+  --shadow-dark: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  /* ---- Layout ---- */
+  --container: 1240px;
+  --container-narrow: 880px;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --header-h: 76px;
+
+  /* ---- Motion ---- */
+  --ease-soft: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms; --dur-base: 240ms; --dur-slow: 480ms;
+}
+
+/* ============================================================
+   BASE — reset + brand helpers
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--text-heading);
+  font-weight: var(--fw-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0; text-wrap: pretty; }
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+button { font-family: inherit; }
+::selection { background: var(--olive-700); color: var(--cream-50); }
+
+/* Layout container */
+.fleur-container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ============================================================
+   COMPONENT — Button (.btn)
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 26px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-soft),
+              transform var(--dur-fast) var(--ease-soft),
+              box-shadow var(--dur-base) var(--ease-soft);
+}
+.btn:active { transform: scale(0.98); }
+.btn svg, .btn i { width: 16px; height: 16px; display: block; }
+
+.btn--sm { padding: 8px 18px; font-size: 13px; gap: 7px; }
+.btn--md { padding: 12px 26px; font-size: 14px; gap: 9px; }
+.btn--lg { padding: 16px 34px; font-size: 15px; gap: 10px; }
+.btn--block { width: 100%; }
+
+.btn--primary   { background: var(--olive-800); color: var(--cream-50); }
+.btn--primary:hover   { background: var(--olive-700); box-shadow: var(--shadow-md); }
+.btn--secondary { background: var(--cream-50); color: var(--olive-800); border-color: var(--olive-800); }
+.btn--secondary:hover { background: var(--cream-100); }
+.btn--ghost     { background: transparent; color: var(--olive-800); }
+.btn--ghost:hover     { background: color-mix(in srgb, var(--olive-800) 8%, transparent); }
+.btn--outline   { background: transparent; color: var(--olive-800); border-color: var(--border-strong); }
+.btn--outline:hover   { background: color-mix(in srgb, var(--olive-800) 6%, transparent); }
+.btn--gold      { background: var(--gold-500); color: var(--olive-950); }
+.btn--gold:hover      { background: var(--gold-400); }
+
+/* ============================================================
+   COMPONENT — Eyebrow (.eyebrow)
+   ============================================================ */
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  display: inline-block;
+}
+.eyebrow--muted { color: var(--text-muted); }
+.eyebrow--olive { color: var(--olive-800); }
+.eyebrow--cream { color: var(--cream-50); }
+.eyebrow--gold  { color: var(--gold-500); }
+.eyebrow--sage  { color: var(--sage-300); }
+.eyebrow--faint { color: var(--text-faint); }
+
+/* ============================================================
+   COMPONENT — ScriptAccent (.script)
+   ============================================================ */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  line-height: 0.9;
+  display: inline-block;
+  color: var(--olive-800);
+}
+.script--cream { color: var(--cream-50); }
+.script--gold  { color: var(--gold-500); }
+.script--sage  { color: var(--sage-400); }
+
+/* ============================================================
+   COMPONENT — Tag (.tag) & Badge (.badge)
+   ============================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+}
+.tag--sm { padding: 4px 10px; font-size: 11px; }
+.tag--sage   { background: var(--sage-100); color: var(--olive-800); }
+.tag--olive  { background: color-mix(in srgb, var(--olive-800) 10%, transparent); color: var(--olive-800); }
+.tag--gold   { background: color-mix(in srgb, var(--gold-500) 22%, transparent); color: #7a5e20; }
+.tag--outline{ background: transparent; color: var(--olive-800); border-color: var(--border-strong); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+}
+.badge--gold  { background: var(--gold-500); color: var(--olive-950); }
+.badge--olive { background: var(--olive-800); color: var(--cream-50); }
+.badge--sage  { background: var(--sage-400); color: var(--olive-950); }
+
+/* ============================================================
+   COMPONENT — Divider (.divider)
+   ============================================================ */
+.divider { border: 0; height: 1px; background: var(--border); margin: 0; }
+.divider--dark { background: var(--border-on-dark); }
+.divider-orn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.divider-orn::before,
+.divider-orn::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.divider-orn span {
+  font-family: var(--font-script);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   COMPONENT — RoomCard (.room-card)
+   ============================================================ */
+.room-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+.room-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.room-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--sage-100);
+}
+.room-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.room-card:hover .room-card__media img { transform: scale(1.05); }
+.room-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--space-5);
+}
+.room-card__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 19px;
+  color: var(--olive-800);
+  margin: 0;
+}
+.room-card__loc { font-size: 13.5px; color: var(--text-muted); margin-top: -4px; }
+.room-card__tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.room-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+.room-card__price {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 22px;
+  color: var(--olive-800);
+}
+.room-card__unit { font-size: 13px; color: var(--text-muted); }
+
+/* ============================================================
+   COMPONENT — Card (.surface-card-box) for booking sidebar
+   ============================================================ */
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-card);
+  color: var(--text-body);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+}
+
+/* ============================================================
+   The signature "F" pattern layer
+   ============================================================ */
+.f-pattern {
+  position: absolute;
+  inset: -12%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--font-script);
+  font-size: 64px;
+  line-height: 1.15;
+  letter-spacing: 0.5em;
+  word-spacing: 0.5em;
+  color: var(--cream-50);
+  opacity: 0.08;
+  transform: rotate(-18deg);
+  transform-origin: top left;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

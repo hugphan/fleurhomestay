@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fleur Homestay — Phòng & Đặt phòng</title>
+<meta name="description" content="Fleur Homestay — hai cơ sở bên hồ Tây (Quảng Khánh & Trích Sài) với 7 căn phòng đầy nắng, máy chiếu, boardgame và bếp riêng. Chỉ từ 150K/đêm." />
+<link rel="icon" href="assets/logos/fleur-mark-olive.png" />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  body { background: var(--cream-50); }
+
+  /* Header */
+  .lp-header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(62,74,33,0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-on-dark);
+  }
+  .lp-header__inner {
+    height: var(--header-h);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .lp-nav {
+    display: flex; gap: 34px;
+    font-family: var(--font-display); font-size: 13.5px; font-weight: 500;
+    letter-spacing: 0.04em; color: var(--cream-50);
+  }
+  .lp-nav a { cursor: pointer; transition: opacity var(--dur-fast) var(--ease-soft); }
+  .lp-nav a:hover { opacity: 0.7; }
+  @media (max-width: 760px){ .lp-nav { display: none !important; } }
+
+  /* Hero */
+  .lp-hero { position: relative; overflow: hidden; background: var(--olive-900); }
+  .lp-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+  .lp-hero__scrim { position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(44,53,24,0.55) 0%, rgba(44,53,24,0.35) 45%, rgba(44,53,24,0.88) 100%); }
+  .lp-hero__inner { position: relative; z-index: 2; padding-top: 92px; padding-bottom: 100px; }
+  .lp-hero h1 { color: var(--cream-50); font-size: clamp(38px, 6vw, 74px); font-weight: 800; line-height: 1.05; margin: 18px 0 6px; }
+  .lp-hero__lead { color: var(--cream-50); font-size: 18px; line-height: 1.6; max-width: 540px; opacity: 0.92; margin: 0 0 30px; }
+  .lp-hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* Sections */
+  .lp-section { padding: var(--space-12) 0; }
+  .lp-facility-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: var(--space-7); }
+  .lp-facility-head h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 800; color: var(--olive-800); margin: 8px 0 12px; }
+  .lp-facility-head p { font-size: 16.5px; line-height: 1.6; color: var(--text-body); margin: 0; }
+  .lp-maplink { display: inline-flex; align-items: center; gap: 8px; color: var(--olive-700); font-size: 14.5px; font-weight: 500; font-family: var(--font-display); }
+  .lp-maplink svg { width: 17px; height: 17px; }
+  .lp-grid-rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-6); }
+
+  .lp-divider-orn { padding: 0; }
+
+  /* Amenities */
+  .lp-amenities { background: var(--paper); }
+  .lp-amenities__head { text-align: center; margin-bottom: var(--space-8); }
+  .lp-amenities__head h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--olive-800); margin: 10px 0 0; }
+  .lp-amenity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6) var(--space-7); }
+  .lp-amenity { display: flex; gap: 16px; align-items: flex-start; }
+  .lp-amenity .ic { width: 46px; height: 46px; border-radius: var(--radius-pill); background: var(--sage-100);
+    display: grid; place-items: center; color: var(--olive-800); flex: none; }
+  .lp-amenity .ic svg { width: 22px; height: 22px; }
+  .lp-amenity__label { font-family: var(--font-display); font-weight: 700; font-size: 15.5px; color: var(--olive-800); }
+  .lp-amenity__note { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-top: 2px; }
+
+  /* Booking CTA */
+  .lp-cta { background: var(--olive-800); position: relative; overflow: hidden; }
+  .lp-cta__inner { position: relative; z-index: 1; text-align: center; max-width: 720px; }
+  .lp-cta h2 { color: var(--cream-50); font-size: clamp(30px, 4.5vw, 50px); font-weight: 800; line-height: 1.1; margin: 12px 0 10px; }
+  .lp-cta__lead { color: var(--sage-200); font-size: 17px; line-height: 1.6; margin: 0 auto 34px; max-width: 540px; }
+  .lp-cta__btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .lp-cta__meta { margin-top: 40px; display: flex; gap: 28px; justify-content: center; flex-wrap: wrap;
+    font-family: var(--font-display); font-size: 13.5px; color: var(--sage-200); letter-spacing: 0.03em; }
+  .lp-cta__meta span { display: flex; align-items: center; gap: 8px; }
+  .lp-cta__meta svg { width: 16px; height: 16px; }
+
+  /* Footer */
+  .lp-footer { background: var(--olive-950); color: var(--sage-200); padding: 56px 0 36px; }
+  .lp-footer__top { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; }
+  .lp-footer__cols { display: flex; gap: 56px; flex-wrap: wrap; }
+  .lp-footer__h { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage-300); margin-bottom: 14px; }
+  .lp-footer a:hover { color: var(--cream-50); }
+</style>
+</head>
+<body>
+
+  <!-- ===================== Header ===================== -->
+  <header class="lp-header">
+    <div class="fleur-container lp-header__inner">
+      <a href="index.html"><img src="assets/logos/fleur-full-cream.png" alt="Fleur Homestay" style="height:46px;width:auto;display:block;" /></a>
+      <nav class="lp-nav">
+        <a data-scroll="quang-khanh">Quảng Khánh</a>
+        <a data-scroll="trich-sai">Trích Sài</a>
+        <a data-scroll="tien-ich">Tiện ích</a>
+        <a data-scroll="lien-he">Liên hệ</a>
+      </nav>
+      <a class="btn btn--gold btn--sm" data-tel><i data-lucide="phone"></i><span data-hotline></span></a>
+    </div>
+  </header>
+
+  <!-- ===================== Hero ===================== -->
+  <section class="lp-hero">
+    <img class="lp-hero__img" src="assets/chung/garden-bath.jpg" alt="Fleur Homestay" />
+    <div class="lp-hero__scrim"></div>
+    <div class="fleur-container lp-hero__inner">
+      <div style="max-width:660px;">
+        <span class="eyebrow eyebrow--cream" style="letter-spacing:0.34em;opacity:0.9;">Homestay · Hồ Tây, Hà Nội</span>
+        <h1>Một bông hoa nở<br/>giữa lòng Hà Nội</h1>
+        <span class="script script--cream" style="font-size:54px;display:block;margin:-4px 0 18px;opacity:0.95;">séjour fleuri</span>
+        <p class="lp-hero__lead">
+          Hai cơ sở bên hồ Tây — <strong>Quảng Khánh</strong> &amp; <strong>Trích Sài</strong> — với bảy căn phòng đầy nắng,
+          đủ máy chiếu, boardgame và bếp riêng. Chỉ từ <strong>150K</strong> một đêm.
+        </p>
+        <div class="lp-hero__cta">
+          <a class="btn btn--gold btn--lg" data-scroll="quang-khanh">Xem phòng</a>
+          <a class="btn btn--secondary btn--lg" data-tel><i data-lucide="phone"></i>Gọi đặt phòng</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Facilities (rendered from data) ===================== -->
+  <div id="facilities"></div>
+
+  <!-- ===================== Amenities ===================== -->
+  <section id="tien-ich" class="lp-section lp-amenities">
+    <div class="fleur-container">
+      <div class="lp-amenities__head">
+        <span class="eyebrow eyebrow--muted">Tiện ích</span>
+        <h2>Có gì ở Fleur?</h2>
+      </div>
+      <div class="lp-amenity-grid">
+        <div class="lp-amenity"><span class="ic"><i data-lucide="projector"></i></span><div><div class="lp-amenity__label">Máy chiếu màn lớn</div><div class="lp-amenity__note">Xem phim, “sleep date” cực chill</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="dices"></i></span><div><div class="lp-amenity__label">Boardgame</div><div class="lp-amenity__note">Kho board game cho hội bạn</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="cooking-pot"></i></span><div><div class="lp-amenity__label">Bếp riêng</div><div class="lp-amenity__note">Bếp &amp; đồ nấu đầy đủ (cơ sở Quảng Khánh)</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="gamepad-2"></i></span><div><div class="lp-amenity__label">Máy chơi game</div><div class="lp-amenity__note">Có tại Sunday Room</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="tv"></i></span><div><div class="lp-amenity__label">Smart TV</div><div class="lp-amenity__note">Netflix, YouTube sẵn sàng</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="bath"></i></span><div><div class="lp-amenity__label">WC khép kín</div><div class="lp-amenity__note">Mọi phòng đều riêng tư</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="wifi"></i></span><div><div class="lp-amenity__label">Wifi tốc độ cao</div><div class="lp-amenity__note">Mạnh, ổn định khắp phòng</div></div></div>
+        <div class="lp-amenity"><span class="ic"><i data-lucide="wind"></i></span><div><div class="lp-amenity__label">Điều hòa hai chiều</div><div class="lp-amenity__note">Ấm áp cả mùa đông Hà Nội</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Booking CTA ===================== -->
+  <section id="lien-he" class="lp-section lp-cta">
+    <div class="f-pattern">F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F</div>
+    <div class="fleur-container lp-cta__inner">
+      <span class="eyebrow eyebrow--sage">Đặt phòng</span>
+      <h2>Nhắn một câu, Fleur giữ phòng cho bạn</h2>
+      <p class="lp-cta__lead">Gọi hotline hoặc nhắn fanpage / TikTok để được tư vấn phòng còn trống, báo giá theo đêm và nhận ưu đãi cho kỳ nghỉ dài.</p>
+      <div class="lp-cta__btns">
+        <a class="btn btn--gold btn--lg" data-tel><i data-lucide="phone"></i><span data-hotline></span></a>
+        <a class="btn btn--secondary btn--lg" data-fanpage target="_blank" rel="noopener"><i data-lucide="message-circle"></i>Fanpage</a>
+        <a class="btn btn--secondary btn--lg" data-tiktok target="_blank" rel="noopener"><i data-lucide="music-2"></i>TikTok</a>
+      </div>
+      <div class="lp-cta__meta">
+        <span><i data-lucide="clock"></i> Check-in <span data-checkin></span> · Check-out <span data-checkout></span></span>
+        <span><i data-lucide="globe"></i> <span data-web></span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="lp-footer">
+    <div class="fleur-container lp-footer__top">
+      <div style="max-width:300px;">
+        <img src="assets/logos/fleur-full-cream.png" alt="Fleur Homestay" style="height:56px;width:auto;display:block;" />
+        <p style="font-size:14px;line-height:1.6;margin-top:16px;color:var(--sage-300);">
+          Sự an yên, sự tự nhiên và bay bổng tinh tế kiểu Pháp — bên hồ Tây, Hà Nội.
+        </p>
+      </div>
+      <div class="lp-footer__cols">
+        <div>
+          <div class="lp-footer__h">Cơ sở</div>
+          <div style="font-size:14px;line-height:2;">Quảng Khánh · Tây Hồ<br/>Trích Sài · Tây Hồ</div>
+        </div>
+        <div>
+          <div class="lp-footer__h">Liên hệ</div>
+          <div style="font-size:14px;line-height:2;">
+            <a data-tel style="display:block;"><span data-hotline></span></a>
+            <a data-fanpage target="_blank" rel="noopener" style="display:block;"><span data-fanpage-label></span></a>
+            <a data-tiktok target="_blank" rel="noopener" style="display:block;"><span data-tiktok-label></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fleur-container" style="margin-top:40px;">
+      <hr class="divider divider--dark" />
+      <p style="font-size:12.5px;color:var(--sage-300);margin-top:18px;letter-spacing:0.03em;">© 2026 Fleur Homestay · Hồ Tây, Hà Nội</p>
+    </div>
+  </footer>
+
+  <script src="rooms-data.js"></script>
+  <script>
+    (function () {
+      var C = window.FLEUR_CONTACT;
+      var FACILITIES = window.FLEUR_FACILITIES;
+      var ROOMS = window.FLEUR_ROOMS;
+
+      // ---- Bind contact info (single source of truth) ----
+      function setAll(sel, fn) { document.querySelectorAll(sel).forEach(fn); }
+      setAll('[data-tel]', function (el) { el.setAttribute('href', 'tel:' + C.hotlineTel); });
+      setAll('[data-hotline]', function (el) { el.textContent = C.hotline; });
+      setAll('[data-fanpage]', function (el) { el.setAttribute('href', C.fanpage); });
+      setAll('[data-fanpage-label]', function (el) { el.textContent = C.fanpageLabel; });
+      setAll('[data-tiktok]', function (el) { el.setAttribute('href', C.tiktok); });
+      setAll('[data-tiktok-label]', function (el) { el.textContent = C.tiktokLabel; });
+      setAll('[data-web]', function (el) { el.textContent = C.web; });
+      setAll('[data-checkin]', function (el) { el.textContent = C.checkin; });
+      setAll('[data-checkout]', function (el) { el.textContent = C.checkout; });
+
+      // ---- Smooth-scroll nav ----
+      setAll('[data-scroll]', function (el) {
+        el.addEventListener('click', function () {
+          var t = document.getElementById(el.getAttribute('data-scroll'));
+          if (t) t.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // ---- Render a room card ----
+      function roomCard(r, facName) {
+        var tags = r.amenities.slice(0, 3).map(function (a) {
+          return '<span class="tag tag--sm tag--sage">' + a + '</span>';
+        }).join('');
+        var href = 'room.html?room=' + r.slug;
+        return '' +
+          '<a class="room-card" href="' + href + '">' +
+            '<div class="room-card__media"><img src="' + r.images[0] + '" alt="' + r.name + '" /></div>' +
+            '<div class="room-card__body">' +
+              '<h3 class="room-card__title">' + r.name + '</h3>' +
+              '<span class="room-card__loc">' + facName + '</span>' +
+              '<div class="room-card__tags">' + tags + '</div>' +
+              '<div class="room-card__foot">' +
+                '<div><span class="room-card__price">' + r.price + 'K</span> <span class="room-card__unit">/ đêm</span></div>' +
+                '<span class="btn btn--primary btn--sm">Xem chi tiết</span>' +
+              '</div>' +
+            '</div>' +
+          '</a>';
+      }
+
+      // ---- Render a facility section ----
+      function facilitySection(f) {
+        var rooms = ROOMS.filter(function (r) { return r.facility === f.id; });
+        var cards = rooms.map(function (r) { return roomCard(r, f.name); }).join('');
+        return '' +
+          '<section id="' + f.id + '" class="lp-section">' +
+            '<div class="fleur-container">' +
+              '<div class="lp-facility-head">' +
+                '<div style="max-width:620px;">' +
+                  '<span class="eyebrow eyebrow--gold">Cơ sở · ' + rooms.length + ' phòng</span>' +
+                  '<h2>' + f.name + '</h2>' +
+                  '<p>' + f.blurb + '</p>' +
+                '</div>' +
+                '<a class="lp-maplink" href="' + f.map + '" target="_blank" rel="noopener">' +
+                  '<i data-lucide="map-pin"></i><span>' + f.area + '</span>' +
+                  '<span style="color:var(--text-faint);">· Xem bản đồ</span>' +
+                '</a>' +
+              '</div>' +
+              '<div class="lp-grid-rooms">' + cards + '</div>' +
+            '</div>' +
+          '</section>';
+      }
+
+      var html = facilitySection(FACILITIES[0]) +
+        '<div class="fleur-container"><div class="divider-orn lp-divider-orn"><span>F</span></div></div>' +
+        facilitySection(FACILITIES[1]);
+      document.getElementById('facilities').innerHTML = html;
+
+      // ---- Render Lucide icons ----
+      if (window.lucide) window.lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>
