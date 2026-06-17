@@ -24,19 +24,36 @@
   }
   .rd-back svg { width: 16px; height: 16px; }
 
-  .rd-wrap { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: var(--space-8); align-items: start; }
-  .rd-book { position: sticky; top: calc(var(--header-h) + 20px); }
+  .rd-wrap { display: grid; grid-template-columns: minmax(0,1fr) 360px;
+    grid-template-areas: "main book" "others book"; gap: var(--space-8); align-items: start; }
+  .rd-main { grid-area: main; }
+  #rd-others { grid-area: others; }
+  .rd-book { grid-area: book; position: sticky; top: calc(var(--header-h) + 20px); }
 
   .rd-hero { position: relative; aspect-ratio: 16/10; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); background: var(--sage-100); }
   .rd-hero img { width: 100%; height: 100%; object-fit: cover; }
   .rd-hero__badge { position: absolute; top: 14px; left: 14px; }
 
-  .rd-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
-  .rd-thumb { aspect-ratio: 4/3; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; border: 2px solid transparent;
+  .rd-thumbs-wrap { position: relative; margin-top: 12px; }
+  .rd-thumbs { display: flex; gap: 10px; overflow-x: auto; scroll-behavior: smooth;
+    scrollbar-width: none; -ms-overflow-style: none; }
+  .rd-thumbs::-webkit-scrollbar { display: none; }
+  .rd-thumb { flex: 0 0 calc((100% - 30px) / 4); aspect-ratio: 4/3; border-radius: var(--radius-sm);
+    overflow: hidden; cursor: pointer; border: 2px solid transparent;
     transition: border-color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft); }
   .rd-thumb:hover { transform: translateY(-2px); }
   .rd-thumb.active { border-color: var(--olive-700); }
   .rd-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .rd-thumb-nav { position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.94);
+    border: 1px solid var(--stone-200); box-shadow: var(--shadow-md);
+    display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 3; }
+  .rd-thumb-nav:hover { background: #fff; }
+  .rd-thumb-nav svg { width: 18px; height: 18px; color: var(--olive-800); }
+  .rd-thumb-nav--prev { left: -8px; }
+  .rd-thumb-nav--next { right: -8px; }
+  .rd-thumbs-wrap.has-overflow .rd-thumb-nav { display: flex; }
 
   .rd-meta { display: flex; gap: 18px; flex-wrap: wrap; color: var(--text-muted); font-size: 14.5px; margin-bottom: 18px; }
   .rd-meta span { display: flex; align-items: center; gap: 7px; }
@@ -54,7 +71,11 @@
   .rd-footer__inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; align-items: center; }
   .rd-footer a:hover { color: var(--cream-50); }
 
-  @media (max-width: 900px){ .rd-wrap { grid-template-columns: 1fr; } .rd-book { position: static; } }
+  @media (max-width: 900px){
+    .rd-wrap { grid-template-columns: 1fr; grid-template-areas: "main" "book" "others"; }
+    .rd-book { position: static; }
+    #rd-others { margin-top: var(--space-4); }
+  }
 </style>
 </head>
 <body>
@@ -70,14 +91,18 @@
   <main class="fleur-container" style="padding-top:var(--space-7);padding-bottom:var(--space-10);">
     <a href="index.html" class="rd-back"><i data-lucide="arrow-left"></i> Tất cả phòng</a>
     <div class="rd-wrap">
-      <div>
+      <div class="rd-main">
         <!-- Gallery -->
         <div>
           <div class="rd-hero">
             <img id="rd-hero-img" src="" alt="" />
             <div class="rd-hero__badge"><span class="badge badge--gold" id="rd-price-badge" style="white-space:nowrap;"></span></div>
           </div>
-          <div class="rd-thumbs" id="rd-thumbs"></div>
+          <div class="rd-thumbs-wrap" id="rd-thumbs-wrap">
+            <button type="button" class="rd-thumb-nav rd-thumb-nav--prev" id="rd-thumb-prev" aria-label="Ảnh trước"><i data-lucide="chevron-left"></i></button>
+            <div class="rd-thumbs" id="rd-thumbs"></div>
+            <button type="button" class="rd-thumb-nav rd-thumb-nav--next" id="rd-thumb-next" aria-label="Ảnh sau"><i data-lucide="chevron-right"></i></button>
+          </div>
         </div>
 
         <!-- Title + description -->
@@ -93,10 +118,10 @@
           <h3 style="font-size:17px;font-weight:700;color:var(--olive-800);margin:var(--space-6) 0 var(--space-4);">Tiện ích trong phòng</h3>
           <div class="rd-amen-grid" id="rd-amenities"></div>
         </div>
-
-        <!-- Other rooms -->
-        <section id="rd-others" style="margin-top:var(--space-9);"></section>
       </div>
+
+      <!-- Other rooms -->
+      <section id="rd-others"></section>
 
       <!-- Booking card -->
       <div class="card rd-book">
@@ -137,7 +162,6 @@
       var C = window.FLEUR_CONTACT;
       var ROOMS = window.FLEUR_ROOMS;
       var FACILITIES = window.FLEUR_FACILITIES;
-      var AMBIANCE = window.FLEUR_AMBIANCE;
 
       var AMENITY_ICON = {
         'Máy chiếu': 'projector', 'Boardgame': 'dices', 'WC khép kín': 'bath',
@@ -150,7 +174,6 @@
       var slug = params.get('room') || ROOMS[0].slug;
       var room = ROOMS.find(function (r) { return r.slug === slug; }) || ROOMS[0];
       var facility = FACILITIES.find(function (f) { return f.id === room.facility; });
-      var gallery = [room.images[0], room.images[1], AMBIANCE[0], AMBIANCE[3]];
       var allAmenities = room.amenities.concat(STANDARD.filter(function (s) { return room.amenities.indexOf(s) === -1; }));
 
       document.title = 'Fleur Homestay — ' + room.name;
@@ -179,22 +202,59 @@
       mapLink.setAttribute('href', facility.map);
       document.getElementById('rd-map-label').textContent = 'Cơ sở ' + facility.name + ' · ' + facility.area + ' · Bản đồ';
 
-      // ---- Gallery ----
+      // ---- Gallery: số ảnh TỰ NHẬN — dò 1.jpg, 2.jpg, ... trong thư mục phòng ----
       var heroImg = document.getElementById('rd-hero-img');
-      heroImg.src = gallery[0];
-      heroImg.alt = room.name;
       var thumbsEl = document.getElementById('rd-thumbs');
-      gallery.forEach(function (src, i) {
-        var t = document.createElement('div');
-        t.className = 'rd-thumb' + (i === 0 ? ' active' : '');
-        t.innerHTML = '<img src="' + src + '" alt="' + room.name + ' ' + (i + 1) + '" />';
-        t.addEventListener('click', function () {
-          heroImg.src = src;
-          thumbsEl.querySelectorAll('.rd-thumb').forEach(function (x) { x.classList.remove('active'); });
-          t.classList.add('active');
+      var thumbsWrap = document.getElementById('rd-thumbs-wrap');
+      var navPrev = document.getElementById('rd-thumb-prev');
+      var navNext = document.getElementById('rd-thumb-next');
+      var imgBase = 'assets/phong/' + room.facility + '/' + room.slug + '/';
+
+      heroImg.src = imgBase + '1.jpg';
+      heroImg.alt = room.name;
+
+      function buildThumbs(list) {
+        if (!list.length) list = [imgBase + '1.jpg'];
+        list.forEach(function (src, i) {
+          var t = document.createElement('div');
+          t.className = 'rd-thumb' + (i === 0 ? ' active' : '');
+          t.innerHTML = '<img src="' + src + '" alt="' + room.name + ' ' + (i + 1) + '" loading="lazy" />';
+          t.addEventListener('click', function () {
+            heroImg.src = src;
+            thumbsEl.querySelectorAll('.rd-thumb').forEach(function (x) { x.classList.remove('active'); });
+            t.classList.add('active');
+          });
+          thumbsEl.appendChild(t);
         });
-        thumbsEl.appendChild(t);
-      });
+        setupThumbNav();
+      }
+
+      // Mũi tên chỉ hiện khi số ảnh tràn quá khung 4 ô; ít ảnh thì để trống.
+      function setupThumbNav() {
+        function refresh() {
+          var overflow = thumbsEl.scrollWidth > thumbsEl.clientWidth + 1;
+          thumbsWrap.classList.toggle('has-overflow', overflow);
+          if (overflow) {
+            navPrev.style.visibility = thumbsEl.scrollLeft > 2 ? 'visible' : 'hidden';
+            navNext.style.visibility =
+              (thumbsEl.scrollLeft + thumbsEl.clientWidth < thumbsEl.scrollWidth - 2) ? 'visible' : 'hidden';
+          }
+        }
+        function step() { return thumbsEl.clientWidth * 0.8; }
+        navPrev.addEventListener('click', function () { thumbsEl.scrollLeft -= step(); });
+        navNext.addEventListener('click', function () { thumbsEl.scrollLeft += step(); });
+        thumbsEl.addEventListener('scroll', refresh);
+        window.addEventListener('resize', refresh);
+        refresh();
+      }
+
+      (function probe(n, found) {
+        if (n > 30) { buildThumbs(found); return; }   // chặn an toàn
+        var img = new Image();
+        img.onload = function () { found.push(imgBase + n + '.jpg'); probe(n + 1, found); };
+        img.onerror = function () { buildThumbs(found); };
+        img.src = imgBase + n + '.jpg';
+      })(1, []);
 
       // ---- Amenities ----
       document.getElementById('rd-amenities').innerHTML = allAmenities.map(function (a) {

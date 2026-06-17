@@ -25,13 +25,13 @@ window.FLEUR_FACILITIES = [
     blurb: 'Ba căn phòng cá tính ven hồ, giá mềm — từ phòng điện ảnh tông tối tới gallery nghệ thuật rực rỡ.' },
 ];
 
-// `photos` = số ảnh của phòng đó. Ảnh nằm trong
-// assets/phong/<cơ-sở>/<phòng>/1.jpg, 2.jpg, ... (đánh số lần lượt).
-// Thêm ảnh: bỏ file 3.jpg, 4.jpg... vào thư mục phòng rồi tăng số này lên.
-const R = (slug, name, facility, price, amenities, desc, beds, guests, photos = 2) => ({
+// Ảnh phòng nằm trong assets/phong/<cơ-sở>/<phòng>/1.jpg, 2.jpg, ... (đánh số
+// LẦN LƯỢT, không bỏ số). `1.jpg` là ảnh chính (thẻ phòng + ảnh lớn trang chi
+// tiết). Trang chi tiết TỰ DÒ số ảnh trong thư mục — chỉ cần thêm/bớt file là
+// gallery tự cập nhật, KHÔNG phải sửa file này. Xem CAP-NHAT-ANH.md.
+const R = (slug, name, facility, price, amenities, desc, beds, guests) => ({
   slug, name, facility, price, amenities, desc, beds, guests,
-  images: Array.from({ length: photos }, (_, i) =>
-    `assets/phong/${facility}/${slug}/${i + 1}.jpg`),
+  images: [`assets/phong/${facility}/${slug}/1.jpg`],
 });
 
 window.FLEUR_ROOMS = [

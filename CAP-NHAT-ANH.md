@@ -36,21 +36,19 @@ Eclipse") → ảnh sẽ được đặt vào đúng thư mục.
 **giữ nguyên tên**. Trang tự dùng ảnh mới, không phải sửa gì khác.
 - Ảnh ngang (khổ ~4:3 hoặc 16:10) sẽ đẹp nhất.
 
-**Cách 3 — Thêm nhiều ảnh cho một phòng.**
-1. Bỏ thêm file vào thư mục phòng, đánh số tiếp: `3.jpg`, `4.jpg`...
-2. Mở `rooms-data.js`, tìm dòng của phòng đó và **thêm số ảnh** vào cuối. Ví dụ
-   phòng Eclipse có 4 ảnh:
-   ```js
-   R('eclipse', 'Eclipse Room', 'quang-khanh', 450,
-     ['Máy chiếu', 'Boardgame', 'WC khép kín', 'Bếp'],
-     'Tông hồng pastel...', '2 giường', '4–5 khách', 4),
-   //                                                  ↑ số ảnh (mặc định 2)
-   ```
+**Cách 3 — Thêm / bớt ảnh cho một phòng (TỰ ĐỘNG, không sửa code).**
+Chỉ cần bỏ thêm file vào thư mục phòng, **đánh số lần lượt** `1.jpg`, `2.jpg`,
+`3.jpg`, … (KHÔNG bỏ số ở giữa). Trang chi tiết tự dò và hiển thị đủ — không
+phải mở `rooms-data.js`.
+- Phòng có **nhiều hơn 4 ảnh**: dải ảnh nhỏ tự hiện **mũi tên ◀ ▶** để cuộn xem.
+- Phòng có **ít ảnh**: chỉ hiện đúng số ảnh đang có (không độn ảnh mẫu).
+- ⚠️ Phải đánh số liên tục. Nếu thiếu `2.jpg` thì trang dừng ở `1.jpg` và bỏ qua
+  các ảnh sau, dù `3.jpg` vẫn còn.
 
 ## Đổi giá, tên phòng, tiện ích, mô tả
 Cũng trong `rooms-data.js` — mỗi phòng là một dòng
-`R('slug', 'Tên', 'cơ sở', giá, [tiện ích], 'mô tả', 'số giường', 'số khách', số ảnh)`.
-Sửa trực tiếp các giá trị này.
+`R('slug', 'Tên', 'cơ sở', giá, [tiện ích], 'mô tả', 'số giường', 'số khách')`.
+Sửa trực tiếp các giá trị này. (Số ảnh KHÔNG khai báo ở đây — trang tự dò.)
 
 ## Đổi số điện thoại / fanpage / map
 Sửa khối `FLEUR_CONTACT` (hotline, fanpage, tiktok, web) và `map` trong
