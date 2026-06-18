@@ -382,19 +382,11 @@ button { font-family: inherit; }
    ============================================================ */
 .f-pattern {
   position: absolute;
-  inset: -12%;
-  overflow: hidden;
+  inset: 0;
+  display: block;
   pointer-events: none;
   user-select: none;
-  font-family: var(--font-script);
-  font-size: 64px;
-  line-height: 1.15;
-  letter-spacing: 0.5em;
-  word-spacing: 0.5em;
-  color: var(--cream-50);
-  opacity: 0.08;
-  transform: rotate(-18deg);
-  transform-origin: top left;
+  opacity: 0.32;
   z-index: 0;
 }
 
