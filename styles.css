@@ -295,11 +295,11 @@ button { font-family: inherit; }
   height: 1px;
   background: var(--border);
 }
-.divider-orn span {
-  font-family: var(--font-script);
-  font-size: 28px;
-  line-height: 1;
-  color: var(--text-muted);
+.divider-orn__f {
+  flex: none;
+  width: 34px;
+  height: 40px;
+  color: var(--olive-700);
 }
 
 /* ============================================================
